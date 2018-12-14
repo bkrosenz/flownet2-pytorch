@@ -329,7 +329,7 @@ class ImagesFromFolder(data.Dataset):
     self.render_size = args.inference_size
     self.replicates = replicates
 
-    images = sorted( glob( join(root, '*.' + iext), recursive=True ) )
+    images = sorted( glob( join(root, '**/*.' + iext), recursive=True ) )
     print('images',join(root, '*.' + iext),images[:100])
     self.image_list = []
     for i in range(len(images)-1):
