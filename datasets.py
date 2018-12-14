@@ -449,35 +449,6 @@ class FramePairs(data.Dataset):
     def __len__(self):
         return self.size * self.replicates
 
-class H5Dataset(data.Dataset):
-
-    def __init__(self, file_path, group, x, y):
-        super(H5Dataset, self).__init__()
-        h5_file = h5py.File(file_path,'r',libver='latest', swmr=True))[group]
-        self.data = h5_file.get(x)
-        self.target = h5_file.get(y)
-
-    def __getitem__(self, index):            
-        return (torch.from_numpy(self.data[index,...]).float(),
-                torch.from_numpy(self.target[index,...]).float())
-
-    def __len__(self):
-        return self.data.shape[0]
-
-class AviDataset(data.Dataset):
-
-    def __init__(self, file_path, group, x, y):
-        super(H5Dataset, self).__init__()
-        h5_file = h5py.File(file_path,'r',libver='latest', swmr=True))[group]
-        self.data = h5_file.get(x)
-        self.target = h5_file.get(y)
-
-    def __getitem__(self, index):            
-        return (torch.from_numpy(self.data[index,...]).float(),
-                torch.from_numpy(self.target[index,...]).float())
-
-    def __len__(self):
-        return self.data.shape[0]
 
 '''
 import argparse
