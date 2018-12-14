@@ -330,7 +330,7 @@ class ImagesFromFolder(data.Dataset):
     self.replicates = replicates
 
     images = sorted( glob( join(root, '*.' + iext), recursive=True ) )
-    print(images[:100)
+    print(images[:100])
     self.image_list = []
     for i in range(len(images)-1):
         im1 = images[i]
