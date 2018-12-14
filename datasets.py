@@ -334,7 +334,8 @@ class ImagesFromFolder(data.Dataset):
     for i in range(len(images)-1):
         im1 = images[i]
         im2 = images[i+1]
-        self.image_list += [ [ im1, im2 ] ]
+        if dirname(im1)==dirname(im2):
+            self.image_list += [ [ im1, im2 ] ]
 
     self.size = len(self.image_list)
 
