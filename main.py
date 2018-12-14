@@ -85,6 +85,7 @@ if __name__ == '__main__':
     # Parse the official arguments
     with tools.TimerBlock("Parsing Arguments") as block:
         args = parser.parse_args()
+        print('arguments:',args)
         if args.number_gpus < 0 : args.number_gpus = torch.cuda.device_count()
 
         # Get argument defaults (hastag #thisisahack)
@@ -136,27 +137,31 @@ if __name__ == '__main__':
         inf_gpuargs['num_workers'] = args.number_workers
 
         if exists(args.training_dataset_root):
-            train_dataset = args.training_dataset_class(args, True, **tools.kwargs_from_args(args, 'training_dataset'))
+            train_dataset = args.training_dataset_class(args,
+                                                        True,
+                                                        **tools.kwargs_from_args(args, 'training_dataset'))
             block.log('Training Dataset: {}'.format(args.training_dataset))
             block.log('Training Input: {}'.format(' '.join([str([d for d in x.size()]) for x in train_dataset[0][0]])))
             block.log('Training Targets: {}'.format(' '.join([str([d for d in x.size()]) for x in train_dataset[0][1]])))
-            train_loader = DataLoader(train_dataset, batch_size=args.effective_batch_size, shuffle=True, **gpuargs)
+            train_loader = DataLoader(train_dataset,
+                                      batch_size=args.effective_batch_size,
+                                      shuffle=True, **gpuargs)
 
         if exists(args.validation_dataset_root):
             validation_dataset = args.validation_dataset_class(args, True, **tools.kwargs_from_args(args, 'validation_dataset'))
             block.log('Validation Dataset: {}'.format(args.validation_dataset))
             block.log('Validation Input: {}'.format(' '.join([str([d for d in x.size()]) for x in validation_dataset[0][0]])))
             block.log('Validation Targets: {}'.format(' '.join([str([d for d in x.size()]) for x in validation_dataset[0][1]])))
-            validation_loader = DataLoader(validation_dataset, batch_size=args.effective_batch_size, shuffle=False, **gpuargs)
+            validation_loader = DataLoader(validation_dataset,
+                                           batch_size=args.effective_batch_size,
+                                           shuffle=False, **gpuargs)
 
         if exists(args.inference_dataset_root):
-            # inference_dataset = args.inference_dataset_class(args, False, **tools.kwargs_from_args(args, 'inference_dataset'))
-            # block.log('Inference Dataset: {}'.format(args.inference_dataset))
-            # block.log('Inference Input: {}'.format(' '.join([str([d for d in x.size()]) for x in inference_dataset[0][0]])))
-            # block.log('Inference Targets: {}'.format(' '.join([str([d for d in x.size()]) for x in inference_dataset[0][1]])))
-            # inference_loader = DataLoader(inference_dataset, batch_size=args.effective_inference_batch_size, shuffle=False, **inf_gpuargs)
             inference_loader = DataLoader(
-                 datasets.ImagesFromFolder(args=args,is_cropped=False,root=args.inference_dataset_root,iext='jpg'),
+                 datasets.ImagesFromFolder(args=args,
+                                           is_cropped=False,
+                                           root=args.inference_dataset_root,
+                                           iext='jpg'),
                  batch_size=args.inference_batch_size,shuffle=False,**gpuargs
              )
     # Dynamically load model and loss class with parameters passed in via "--model_[param]=[value]" or "--loss_[param]=[value]" arguments
@@ -403,7 +408,10 @@ if __name__ == '__main__':
 
     for epoch in progress:
         if args.inference or (args.render_validation and ((epoch - 1) % args.validation_frequency) == 0):
-            stats = inference(args=args, epoch=epoch - 1, data_loader=inference_loader, model=model_and_loss, offset=offset)
+            stats = inference(args=args,
+                              epoch=epoch - 1,
+                              data_loader=inference_loader,
+                              model=model_and_loss, offset=offset)
             offset += 1
 
         if not args.skip_validation and ((epoch - 1) % args.validation_frequency) == 0:
