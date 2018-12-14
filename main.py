@@ -161,7 +161,7 @@ if __name__ == '__main__':
                  datasets.ImagesFromFolder(args=args,
                                            is_cropped=False,
                                            root=args.inference_dataset_root,
-                                           iext='jpg'),
+                                           iext='png'),
                  batch_size=args.inference_batch_size,shuffle=False,**gpuargs
              )
     # Dynamically load model and loss class with parameters passed in via "--model_[param]=[value]" or "--loss_[param]=[value]" arguments
